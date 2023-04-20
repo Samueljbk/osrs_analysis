@@ -1,5 +1,6 @@
 import json
 import os
+from transform import get_user_data
 
 
 def load_data_file(filename) -> dict:
@@ -21,4 +22,11 @@ def load_data(directory):
 
 if __name__ == '__main__':
     data = load_data('data/')
-    print(data)
+
+    username = 'shupwup'
+
+    usernames_data = []
+    for file_data in data:
+        user_data = get_user_data(username, file_data)
+        usernames_data.append(user_data)
+    print(usernames_data)
