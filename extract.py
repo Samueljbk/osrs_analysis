@@ -18,15 +18,14 @@ def load_data(directory: str) -> list:
 
 
 if __name__ == "__main__":
-    data = load_data("data/")
+    user_data = load_data("data/")
 
     username = "shupwup"
 
-    usernames_data = [get_user_data(username, file_data) for file_data in data if get_user_data(
-        username, file_data) is not None]
+    usernames_data = [get_user_data(username, file_data) for file_data in user_data]
     # print(usernames_data)
 
-    skill = 'attack'
+    skill = "attack"
     user_data = usernames_data[0]
     skill_data = get_skill_data(skill, user_data)
     print(skill_data)
