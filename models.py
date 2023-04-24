@@ -81,3 +81,5 @@ if __name__ == "__main__":
     with open("data/2023-04-11-05-06.json") as f:
         data = create_data_from_json(f.read())
     print(data)
+
+    data.users[0].skills["attack"].experience
