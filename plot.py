@@ -2,11 +2,17 @@ from extract import load_data
 from transform import get_skill_time_series
 import matplotlib.pyplot as plt
 
-all_data = load_data("data/")
-user_list = ["shupwup", "telemascope", "jerome-o"]
+
+def main():
+    all_data = load_data("data/")
+    user_list = ["shupwup", "telemascope", "jerome-o"]
+
+    plot_relative_data(all_data, user_list)
+    plot_absolute_data(all_data, user_list)
+    plt.show()
 
 
-def plot_relative_data():
+def plot_relative_data(all_data, user_list):
     fig, ax = plt.subplots()  # Create a figure containing a single axes.
 
     for user in user_list:
@@ -29,7 +35,7 @@ def plot_relative_data():
     ax.set_xlabel("Timestamp")
 
 
-def plot_absolute_data():
+def plot_absolute_data(all_data, user_list):
     fig, ax = plt.subplots()  # Create a figure containing a single axes.
 
     for user in user_list:
@@ -47,9 +53,4 @@ def plot_absolute_data():
 
 
 if __name__ == "__main__":
-    import logging
-
-    logging.basicConfig(level=logging.INFO)
-    plot_relative_data()
-    plot_absolute_data()
-    plt.show()
+    main()
