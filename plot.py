@@ -3,17 +3,20 @@ from transform import get_skill_time_series
 import matplotlib.pyplot as plt
 
 all_data = load_data("data/")
-user_list = ["shupwup", "jerome-o", "ryan the ant"]
-timestamp_list, skill_attribute_value_list = get_skill_time_series(
-    "shupwup", "defense", all_data, "level"
-)
+user_list = ["shupwup", "telemascope", "jerome-o"]
 
 
 def main():
     fig, ax = plt.subplots()  # Create a figure containing a single axes.
-    ax.plot(
-        timestamp_list, skill_attribute_value_list, label="Defense Level"
-    )  # Plot some data on the axes.
+
+    for user in user_list:
+        timestamp_list, skill_attribute_value_list = get_skill_time_series(
+            user, "total", all_data, "experience"
+        )
+        ax.plot(
+            timestamp_list, skill_attribute_value_list, label=user
+        )  # Plot some data on the axes.
+
     ax.set_title("Defense Level for shupwup")
     ax.legend()
     ax.set_ylabel("Defense Level")
