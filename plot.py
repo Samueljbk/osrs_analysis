@@ -1,17 +1,45 @@
 from extract import load_data
-from transform import get_skill_time_series
+from transform import get_skill_time_series, get_user_data
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 def main():
     all_data = load_data("data/")
     user_list = ["shupwup", "telemascope", "jerome-o", "ryan the ant"]
+    username = "shupwup"
     skill = "total"
     skill_attribute = "experience"
 
     plot_relative_data(all_data, user_list, skill, skill_attribute)
     plot_absolute_data(all_data, user_list, skill, skill_attribute)
+    plot_all_skill_xp(all_data, username)
     plt.show()
+
+
+def plot_all_skill_xp(all_data, username):
+    fig, ax = plt.subplots()
+
+    user_data = get_user_data(username, all_data[0])
+    skills = user_data["skills"].keys()
+
+    for skill in skills:
+        timestamp_list, skill_attribute_value_list = get_skill_time_series(
+            username, skill, all_data, "experience"
+        )
+        first_xp_value = skill_attribute_value_list[0]
+        offset_xp_value = [
+            xp_value - first_xp_value for xp_value in skill_attribute_value_list
+        ]
+        if not all(np.array(offset_xp_value) == 0):
+            ax.plot(
+                timestamp_list, offset_xp_value, label=skill
+            )  # Plot some data on the axes.
+
+    ax.set_title(f"All skill XP for {username}")
+    ax.legend()
+    ax.set_ylabel("Skill experience")
+    ax.set_xlabel("Timestamp")
 
 
 def plot_relative_data(all_data, user_list, skill, skill_attribute):
