@@ -1,4 +1,5 @@
 from typing import List, Dict, Callable, Tuple
+from datetime import datetime
 
 
 def get_user_data(username: str, data: dict) -> dict:
@@ -22,7 +23,7 @@ def get_skill_time_series(
         user_data = get_user_data(username, data)
         skill_data = get_skill_data(skill, user_data)
         skill_attribute_value = skill_data.get(skill_attribute)
-        timestamp = data.get("timestamp")
+        timestamp = datetime.fromtimestamp(data.get("timestamp"))
         timestamp_list.append(timestamp)
         skill_attribute_value_list.append(skill_attribute_value)
     return timestamp_list, skill_attribute_value_list
