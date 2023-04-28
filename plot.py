@@ -14,7 +14,35 @@ def main():
     plot_relative_data(all_data, user_list, skill, skill_attribute)
     plot_absolute_data(all_data, user_list, skill, skill_attribute)
     plot_all_skill_xp(all_data, username)
+    plot_skill_xp_bar(all_data, username)
     plt.show()
+
+
+def plot_skill_xp_bar(all_data, username):
+    fig, ax = plt.subplots()
+
+    user_data = get_user_data(username, all_data[0])
+    skills = user_data["skills"].keys()
+
+    skill_xp_gains = []
+    skill_labels = []
+
+    for skill in skills:
+        _, skill_attribute_value_list = get_skill_time_series(
+            username, skill, all_data, "experience"
+        )
+        xp_gain = skill_attribute_value_list[-1] - skill_attribute_value_list[0]
+
+        if xp_gain > 0:
+            skill_xp_gains.append(xp_gain)
+            skill_labels.append(skill)
+
+    ax.bar(skill_labels, skill_xp_gains)
+
+    ax.set_title(f"Skill XP gains for {username}")
+    ax.set_ylabel("XP gained")
+    ax.set_xlabel("Skills")
+    plt.xticks(rotation=45)
 
 
 def plot_all_skill_xp(all_data, username):
