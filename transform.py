@@ -27,3 +27,23 @@ def get_skill_time_series(
         timestamp_list.append(timestamp)
         skill_attribute_value_list.append(skill_attribute_value)
     return timestamp_list, skill_attribute_value_list
+
+
+def get_boss_data(boss: str, user_data: dict) -> dict:
+    if boss in user_data["bosses"]:
+        return user_data["bosses"][boss]
+
+
+def get_boss_time_series(
+    username: str, boss: str, all_data: List[dict], boss_attribute: str
+):
+    timestamp_list = []
+    boss_attribute_value_list = []
+    for data in all_data:
+        user_data = get_user_data(username, data)
+        boss_data = get_boss_data(boss, user_data)
+        boss_attribute_value = boss_data.get(boss_attribute)
+        timestamp = datetime.fromtimestamp(data.get("timestamp"))
+        timestamp_list.append(timestamp)
+        boss_attribute_value_list.append(boss_attribute_value)
+    return timestamp_list, boss_attribute_value_list
