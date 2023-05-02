@@ -42,7 +42,10 @@ def get_boss_time_series(
     for data in all_data:
         user_data = get_user_data(username, data)
         boss_data = get_boss_data(boss, user_data)
-        boss_attribute_value = boss_data.get(boss_attribute)
+        if boss_data is not None:
+            boss_attribute_value = boss_data.get(boss_attribute)
+        else:
+            boss_attribute_value = None
         timestamp = datetime.fromtimestamp(data.get("timestamp"))
         timestamp_list.append(timestamp)
         boss_attribute_value_list.append(boss_attribute_value)

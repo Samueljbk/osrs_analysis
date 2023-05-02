@@ -1,5 +1,10 @@
 from extract import load_data
-from transform import get_skill_time_series, get_user_data
+from transform import (
+    get_skill_time_series,
+    get_user_data,
+    get_boss_data,
+    get_boss_time_series,
+)
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -7,7 +12,7 @@ import numpy as np
 def main():
     all_data = load_data("data/")
     user_list = ["shupwup", "telemascope", "jerome-o", "ryan the ant"]
-    username = "shupwup"
+    username = "telemascope"
     skill = "total"
     skill_attribute = "experience"
 
@@ -15,33 +20,40 @@ def main():
     plot_absolute_data(all_data, user_list, skill, skill_attribute)
     plot_all_skill_xp(all_data, username)
     plot_skill_xp_bar(all_data, username)
+    plot_user_boss_kc_gains(all_data, username)
     plt.show()
 
 
-def plot_user_boss_kc(all_data, username):
+def plot_user_boss_kc_gains(all_data, username):
     fig, ax = plt.subplots()
 
     user_data = get_user_data(username, all_data[0])
-    skills = user_data["skills"].keys()
+    bosses = user_data["bosses"].keys()
 
-    skill_xp_gains = []
-    skill_labels = []
+    boss_kc_gains = []
+    boss_name = []
 
-    for skill in skills:
-        _, skill_attribute_value_list = get_skill_time_series(
-            username, skill, all_data, "experience"
+    for boss in bosses:
+        _, boss_attribute_value_list = get_boss_time_series(
+            username, boss, all_data, "kills"
         )
-        xp_gain = skill_attribute_value_list[-1] - skill_attribute_value_list[0]
+        # Filter out None values
+        boss_attribute_value_list = [
+            kc for kc in boss_attribute_value_list if kc is not None
+        ]
 
-        if xp_gain > 0:
-            skill_xp_gains.append(xp_gain)
-            skill_labels.append(skill)
+        if boss_attribute_value_list:
+            kill_count = boss_attribute_value_list[-1] - boss_attribute_value_list[0]
 
-    ax.bar(skill_labels, skill_xp_gains)
+            if kill_count > 0:
+                boss_kc_gains.append(kill_count)
+                boss_name.append(boss)
 
-    ax.set_title(f"Skill XP gains for {username}")
-    ax.set_ylabel("XP gained")
-    ax.set_xlabel("Skills")
+    ax.bar(boss_name, boss_kc_gains)
+
+    ax.set_title(f"Boss KC gains for {username}")
+    ax.set_ylabel("Boss KC gained")
+    ax.set_xlabel("Boss")
     plt.xticks(rotation=45)
 
 
