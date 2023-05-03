@@ -45,7 +45,7 @@ def get_boss_time_series(
         if boss_data is not None:
             boss_attribute_value = boss_data.get(boss_attribute)
         else:
-            boss_attribute_value = None
+            boss_attribute_value = 0
         timestamp = datetime.fromtimestamp(data.get("timestamp"))
         timestamp_list.append(timestamp)
         boss_attribute_value_list.append(boss_attribute_value)

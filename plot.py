@@ -12,7 +12,7 @@ import numpy as np
 def main():
     all_data = load_data("data/")
     user_list = ["shupwup", "telemascope", "jerome-o", "ryan the ant"]
-    username = "telemascope"
+    username = "shupwup"
     skill = "total"
     skill_attribute = "experience"
 
@@ -24,10 +24,44 @@ def main():
     plt.show()
 
 
-def plot_user_boss_kc_gains(all_data, username):
+def plot_user_boss_kc(all_data, username):
     fig, ax = plt.subplots()
 
     user_data = get_user_data(username, all_data[0])
+    bosses = user_data["bosses"].keys()
+
+    boss_kc = []
+    boss_name = []
+
+    for boss in bosses:
+        _, boss_attribute_value_list = get_boss_time_series(
+            username, boss, all_data, "kills"
+        )
+
+        boss_attribute_value_list = [
+            kc for kc in boss_attribute_value_list if kc is not None
+        ]
+
+        if boss_attribute_value_list:
+            kill_count = boss_attribute_value_list[-1] - boss_attribute_value_list[0]
+        else:
+            kill_count = 0
+
+        boss_kc.append(kill_count)
+        boss_name.append(boss)
+
+    ax.bar(boss_name, boss_kc)
+
+    ax.set_title(f"Boss KC for {username}")
+    ax.set_ylabel("Boss KC")
+    ax.set_xlabel("Boss")
+    plt.xticks(rotation=45)
+
+
+def plot_user_boss_kc_gains(all_data, username):
+    fig, ax = plt.subplots()
+
+    user_data = get_user_data(username, all_data[-1])
     bosses = user_data["bosses"].keys()
 
     boss_kc_gains = []
@@ -45,7 +79,7 @@ def plot_user_boss_kc_gains(all_data, username):
         if boss_attribute_value_list:
             kill_count = boss_attribute_value_list[-1] - boss_attribute_value_list[0]
 
-            if kill_count > 0:
+            if kill_count != 0:
                 boss_kc_gains.append(kill_count)
                 boss_name.append(boss)
 
