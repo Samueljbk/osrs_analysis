@@ -1,15 +1,15 @@
 import json
 import os
 from transform import get_user_data, get_skill_data, get_skill_time_series
+from models import ScrapeData
+from typing import List
 
 
-def load_data_file(filename: str) -> dict:
-    with open(filename, "r") as f:
-        data = json.load(f)
-    return data
+def load_data_file(filename: str) -> ScrapeData:
+    return ScrapeData.parse_file(filename)
 
 
-def load_data(directory: str) -> list:
+def load_data(directory: str) -> List[ScrapeData]:
     return [
         load_data_file(os.path.join(directory, filename))
         for filename in os.listdir(directory)

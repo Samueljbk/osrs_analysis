@@ -7,6 +7,7 @@ from transform import (
 )
 import matplotlib.pyplot as plt
 import numpy as np
+from typing import List
 
 
 def main():
@@ -15,45 +16,29 @@ def main():
     username = "shupwup"
     skill = "total"
     skill_attribute = "experience"
+    boss_attribute = "kills"
+    boss = "Vorkath"
 
-    plot_relative_data(all_data, user_list, skill, skill_attribute)
-    plot_absolute_data(all_data, user_list, skill, skill_attribute)
-    plot_all_skill_xp(all_data, username)
-    plot_skill_xp_bar(all_data, username)
-    plot_user_boss_kc_gains(all_data, username)
+    # plot_relative_data(all_data, user_list, skill, skill_attribute)
+    # plot_absolute_data(all_data, user_list, skill, skill_attribute)
+    # plot_all_skill_xp(all_data, username)
+    # plot_skill_xp_bar(all_data, username)
+    # plot_user_boss_kc_gains(all_data, username)
+    plot_all_user_absolute_boss_kc(all_data, user_list, boss, boss_attribute)
     plt.show()
 
 
-def plot_user_boss_kc(all_data, username):
+def plot_all_user_absolute_boss_kc(
+    all_data: List[dict], user_list, boss, boss_attribute
+):
     fig, ax = plt.subplots()
 
-    user_data = get_user_data(username, all_data[0])
-    bosses = user_data["bosses"].keys()
+    for user in user_list:
+        kill_count = get_boss_data(boss, all_data)
 
-    boss_kc = []
-    boss_name = []
-
-    for boss in bosses:
-        _, boss_attribute_value_list = get_boss_time_series(
-            username, boss, all_data, "kills"
-        )
-
-        boss_attribute_value_list = [
-            kc for kc in boss_attribute_value_list if kc is not None
-        ]
-
-        if boss_attribute_value_list:
-            kill_count = boss_attribute_value_list[-1] - boss_attribute_value_list[0]
-        else:
-            kill_count = 0
-
-        boss_kc.append(kill_count)
-        boss_name.append(boss)
-
-    ax.bar(boss_name, boss_kc)
-
-    ax.set_title(f"Boss KC for {username}")
-    ax.set_ylabel("Boss KC")
+    ax.bar(timestamp_list, boss_attribute_value_list)
+    ax.set_title(f"Boss KC gains for {user_list}")
+    ax.set_ylabel("Boss KC gained")
     ax.set_xlabel("Boss")
     plt.xticks(rotation=45)
 
