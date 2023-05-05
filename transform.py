@@ -1,10 +1,11 @@
 from typing import List, Dict, Callable, Tuple
 from datetime import datetime
+import models as m
 
 
-def get_user_data(username: str, data: dict) -> dict:
-    for entry in data["users"]:
-        if entry["username"] == username:
+def get_user_data(username: str, data: m.ScrapeData) -> m.UserData:
+    for entry in data.users:
+        if entry.username == username:
             return entry
     raise Exception("Couldn't find user")
 
